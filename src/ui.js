@@ -56,9 +56,11 @@ function initListSelectBtn(listName, itemArray){
     listSelectBtn.addEventListener('click', () => {
         clearItems();
         renderItems(filterByList(itemArray, listName),listName);
+        clearNewItemBtn()
+        initNewItemBtn(itemArray, listName);
     });
-    document.getElementById('listDisplay').appendChild(listSelectBtn);
 
+    document.getElementById('listDisplay').appendChild(listSelectBtn);
     clearNewItemBtn()
     initNewItemBtn(itemArray, listName);
     

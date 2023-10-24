@@ -6,7 +6,7 @@ import { createList, createItem, filterByList } from './appLogic.js';
 const listArray = [];
 //create item array. all items in one array, can filter by project
 const itemArray = [];
-//flag for selected list. Probably don't want to leave
+
 
 
 initNewListBtn(listArray, itemArray);
