@@ -10,7 +10,8 @@ const itemArray = [];
 
 
 initNewListBtn(listArray, itemArray);
-initNewItemBtn(itemArray);
+// // initNewItemBtn(itemArray);
+// initNewItemBtn(itemArray, 'default');
 
 
 

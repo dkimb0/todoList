@@ -17,51 +17,51 @@ function initNewListBtn(listArray, itemArray){
             initListSelectBtn(listName, itemArray);
             //just clear items, as new list has no renderable items
             clearItems();
+            renderItems(filterByList(itemArray, listName), listName);
 
         }else{
             console.log('list name already taken');
         }
     });
-    document.getElementById('listSelect').appendChild(initNewListBtn);
+    document.getElementById('newListBtn').appendChild(initNewListBtn);
 }
 
 
 //this needs to be re-rendered each time list view is loaded
-function initNewItemBtn(itemArray){
+function initNewItemBtn(itemArray, listName){
     const initNewItemBtn = document.createElement('button');
-    initNewItemBtn.textContent = 'New Item';
+    initNewItemBtn.textContent = `+ ${listName} Item`;
 
     initNewItemBtn.addEventListener('click', () => {
         let itemName = prompt('Item title: ');
-        let listName = prompt('List: ');
 
         itemArray.push(createItem(itemName, listName));
         clearItems();
         renderItems(filterByList(itemArray, listName), listName);
-    })
-    document.getElementById('listSelect').appendChild(initNewItemBtn);
+    });
+
+    document.getElementById('newItemBtn').appendChild(initNewItemBtn);
 }
 
 
 
 
-
-
-//creates new list div and selector button
-//NEEDS: list render, 
+//creates new list selector button
 function initListSelectBtn(listName, itemArray){
     //initialize list select button
     const listSelectBtn = document.createElement('button');
     listSelectBtn.textContent = listName;
+    
 
     listSelectBtn.addEventListener('click', () => {
-        //how to know which list is selected? Need one for creation too
         clearItems();
-        console.log(listName);
-        console.log(itemArray);
         renderItems(filterByList(itemArray, listName),listName);
     });
     document.getElementById('listDisplay').appendChild(listSelectBtn);
+
+    clearNewItemBtn()
+    initNewItemBtn(itemArray, listName);
+    
 }
 
 //function to select list
@@ -75,10 +75,17 @@ function clearItems(){
     }
 }
 
+function clearNewItemBtn(){
+    const newItemBtn = document.getElementById('newItemBtn');
+    if(newItemBtn.firstElementChild){
+        newItemBtn.removeChild(newItemBtn.firstElementChild);
+    }
+}
+
 function renderItems(itemArray, listName){
+
     for (let i in itemArray){
         let listItem = document.createElement('ul');
-        console.log(listName);
         listItem.setAttribute('class', listName);
         listItem.textContent = itemArray[i].title;
         if (itemArray[i].getComplete() === true){
