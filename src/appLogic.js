@@ -29,10 +29,24 @@ function createList(_name, _order){
 function createItem(_title, _list){
     //add form later in UI which will populate these
     let title = _title;
-    let dueDate;
-    let priority = false;
     let list = _list;
     let complete = false;
+    let priority = false;
+    let detail = false;
+
+    let dueDate = 'today';
+
+    const toggleDetail = () => {
+        if (detail === true){
+            detail = false;
+        }else{
+            detail = true;
+        }
+    };
+
+    const getDetail = () => {
+        return detail;
+    }
 
     const toggleComplete = () => {
         if (complete === true){
@@ -46,11 +60,34 @@ function createItem(_title, _list){
         return complete;
     }
 
+    const togglePriority = () => {
+        if (priority === true) {
+            priority = false;
+        }else{
+            priority = true;
+        }
+    };
+
+    const getPriority = () => {
+        return priority;
+    }
+
+    const toggleDelete = () => {
+        list = 'deleted';
+    }
+
     return{
         title,
         list,
+        dueDate,
+
+        toggleDetail,
+        getDetail,
         toggleComplete,
-        getComplete
+        getComplete,
+        togglePriority,
+        getPriority,
+        toggleDelete,
 
     };
 }
