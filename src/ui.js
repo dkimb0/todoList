@@ -20,7 +20,7 @@ function initNewListBtn(listArray, itemArray){
             //generate list selector button
             initListSelectBtn(listName, itemArray);
             //just clear items, as new list has no renderable items
-            clearItems();
+            clearItems(itemArray);
             renderItems(filterByList(itemArray, listName), listName);
 
         }else{
@@ -41,7 +41,7 @@ function initNewItemBtn(itemArray, listName){
             return;
         }
         itemArray.push(createItem(itemName, listName));
-        clearItems();
+        clearItems(itemArray);
         renderItems(filterByList(itemArray, listName), listName);
     });
 
@@ -55,7 +55,7 @@ function initListSelectBtn(listName, itemArray){
     listSelectBtn.textContent = listName;
     
     listSelectBtn.addEventListener('click', () => {
-        clearItems();
+        clearItems(itemArray);
         renderItems(filterByList(itemArray, listName),listName);
         clearNewItemBtn()
         initNewItemBtn(itemArray, listName);
@@ -99,17 +99,21 @@ function renderItems(itemArray, listName){
     });
 }
 
-
-function clearItems(){
+function clearItems(itemArray){
     const listDisplay = document.getElementById('items');
     while (listDisplay.firstElementChild) {
         listDisplay.removeChild(listDisplay.firstElementChild);
     }
 
-    clearDetails();
+    clearDetails(itemArray);
 }
 
-function clearDetails(){
+function clearDetails(itemArray){
+    for (let i in itemArray){
+        itemArray[i].detail = false;
+        console.log(itemArray[i].detail);
+    };
+    
     const detailsDisplay = document.getElementById('details');
     while(detailsDisplay.firstElementChild){
         detailsDisplay.removeChild(detailsDisplay.firstElementChild);
@@ -177,28 +181,21 @@ function detailItem(item, itemArray, listName){
     document.getElementById(listName+itemArray.indexOf(item)).appendChild(detailBtn);
     
     detailBtn.addEventListener('click', function(){
-        clearDetails();
-        
-        //create Date view
         let details = document.getElementById('details');
+
         let showTitle = document.createElement('span');
         let showDate = document.createElement('span');
 
         showTitle.textContent = 'Title: ' + item.title;
         showDate.textContent = '// Due Date: ' + item.dueDate;
         
-
-        if (item.getDetail() === true){
-            item.toggleDetail();
-            while(details.firstChild){
-                details.removeChild(details.firstChild);
-            }
-
+        if (item.detail === true){
+            clearDetails(itemArray);
         }else{
-            item.toggleDetail();
             details.appendChild(showTitle);
+            editTitle(item, itemArray, listName, details);    
             details.appendChild(showDate);
-
+            item.detail = true;
         }
         //create Date edit
         // editDate();
@@ -216,7 +213,25 @@ function deleteItem(item, itemDiv, itemArray, listName){
     });
 }
 
+// function reset
+
 //details edit functions:
+function editTitle(item, itemArray, listName, details){
+    const editTitleBtn = document.createElement('button');
+    editTitleBtn.textContent = 'Edit Title';
+    editTitleBtn.addEventListener('click', function(){
+        item.title = prompt('Title: ');
+        clearItems(itemArray);
+        if (item.getDetail() === true){
+            item.toggleDetail();
+        }
+        renderItems(itemArray, listName);
+        //add something just to reload details menu
+        //need separate function for renderDetails()
+    });
+    details.appendChild(editTitleBtn);
+}
+
 // function editDate(item){
 //     let editDateBtn = document.createElement('button');
 //     editDate.textContent = 'Change Date';

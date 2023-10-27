@@ -30,11 +30,13 @@ function createItem(_title, _list){
     //add form later in UI which will populate these
     let title = _title;
     let list = _list;
+    let dueDate = '';
+
     let complete = false;
     let priority = false;
     let detail = false;
 
-    let dueDate = 'today';
+
 
     const toggleDetail = () => {
         if (detail === true){
@@ -80,6 +82,7 @@ function createItem(_title, _list){
         title,
         list,
         dueDate,
+        detail,
 
         toggleDetail,
         getDetail,
