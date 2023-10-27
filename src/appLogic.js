@@ -30,7 +30,8 @@ function createItem(_title, _list){
     //add form later in UI which will populate these
     let title = _title;
     let list = _list;
-    let dueDate = '';
+    let dueDate = 'none';
+    let description = '';
 
     let complete = false;
     let priority = false;
@@ -82,6 +83,7 @@ function createItem(_title, _list){
         title,
         list,
         dueDate,
+        description,
         detail,
 
         toggleDetail,

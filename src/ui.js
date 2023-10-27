@@ -147,7 +147,7 @@ function completeItem(item, domItem, itemArray, listName){
 function displayItem(item, itemArray, listName){
     let domItem = document.createElement('p');
     domItem.setAttribute('class', listName);
-    domItem.textContent = item.title;
+    domItem.textContent = item.title + ' (Due Date: ' + item.dueDate + ')';
     //make complete and priority item styling persistent
     if (item.getComplete() === true){
         domItem.style.setProperty('text-decoration', 'line-through');
@@ -181,25 +181,59 @@ function detailItem(item, itemArray, listName){
     document.getElementById(listName+itemArray.indexOf(item)).appendChild(detailBtn);
     
     detailBtn.addEventListener('click', function(){
-        let details = document.getElementById('details');
+        // let details = document.getElementById('details');
 
-        let showTitle = document.createElement('span');
-        let showDate = document.createElement('span');
+        // let showTitle = document.createElement('span');
+        // let showDate = document.createElement('span');
+        // let showDesc = document.createElement('span');
 
-        showTitle.textContent = 'Title: ' + item.title;
-        showDate.textContent = '// Due Date: ' + item.dueDate;
-        
-        if (item.detail === true){
-            clearDetails(itemArray);
-        }else{
-            details.appendChild(showTitle);
-            editTitle(item, itemArray, listName, details);    
-            details.appendChild(showDate);
-            item.detail = true;
-        }
-        //create Date edit
-        // editDate();
+        // showTitle.textContent = 'Title: ' + item.title;
+        // showDate.textContent = '// Due Date: ' + item.dueDate;
+        // showDesc.textContent = '// Description: ' + item.description;
+
+        // if (item.detail === true){
+        //     clearDetails(itemArray);
+        // }else{
+        //     details.appendChild(showTitle);
+        //     editTitle(item, itemArray, listName, details);
+
+        //     details.appendChild(showDate);
+        //     editDate(item, itemArray, listName, details);
+            
+        //     details.appendChild(showDesc);
+        //     editDesc(item, itemArray, listName, details);
+            
+        //     item.detail = true;
+        // }
+        toggleDetailDisplay(item, itemArray, listName);
     })
+}
+
+function toggleDetailDisplay(item, itemArray, listName){
+    let details = document.getElementById('details');
+
+    let showTitle = document.createElement('span');
+    let showDate = document.createElement('span');
+    let showDesc = document.createElement('span');
+
+    showTitle.textContent = 'Title: ' + item.title;
+    showDate.textContent = '// Due Date: ' + item.dueDate;
+    showDesc.textContent = '// Description: ' + item.description;
+
+    if (item.detail === true){
+        clearDetails(itemArray);
+    }else{
+        details.appendChild(showTitle);
+        editTitle(item, itemArray, listName, details);
+
+        details.appendChild(showDate);
+        editDate(item, itemArray, listName, details);
+        
+        details.appendChild(showDesc);
+        editDesc(item, itemArray, listName, details);
+        
+        item.detail = true;
+    }
 }
 
 function deleteItem(item, itemDiv, itemArray, listName){
@@ -210,7 +244,10 @@ function deleteItem(item, itemDiv, itemArray, listName){
     deleteBtn.addEventListener('click', function() {
         item.list = 'delete';
         document.getElementById('items').removeChild(itemDiv);
+        clearDetails(itemArray);
     });
+
+    
 }
 
 // function reset
@@ -222,27 +259,42 @@ function editTitle(item, itemArray, listName, details){
     editTitleBtn.addEventListener('click', function(){
         item.title = prompt('Title: ');
         clearItems(itemArray);
-        if (item.getDetail() === true){
-            item.toggleDetail();
-        }
+        // if (item.getDetail() === true){
+        //     item.toggleDetail();
+        // }
         renderItems(itemArray, listName);
         //add something just to reload details menu
         //need separate function for renderDetails()
+        toggleDetailDisplay(item, itemArray, listName);
     });
     details.appendChild(editTitleBtn);
 }
 
-// function editDate(item){
-//     let editDateBtn = document.createElement('button');
-//     editDate.textContent = 'Change Date';
-//     document.getElementById('details').appendChild(editDateBtn);
+function editDate(item, itemArray, listName, details){
+    let editDateBtn = document.createElement('button');
+    editDateBtn.textContent = 'Change Date';
 
-//     editDateBtn.addEventListener('click', function(){
-//         item.dueDate = prompt('Due Date: ');
-//     })
+    editDateBtn.addEventListener('click', function(){
+        item.dueDate = prompt('Due Date: ');
+        clearItems(itemArray);
+        renderItems(itemArray, listName);
+        toggleDetailDisplay(item, itemArray, listName);      
+    })
+    details.appendChild(editDateBtn);
+}
 
-//     renderDetail();
-// }
+function editDesc(item, itemArray, listName, details){
+    let editDescBtn = document.createElement('button');
+    editDescBtn.textContent = 'Edit Description';
+    
+    editDescBtn.addEventListener('click', function(){
+        item.description = prompt('Edit Description: ');
+        clearItems(itemArray);
+        renderItems(itemArray, listName);
+        toggleDetailDisplay(item, itemArray, listName);
+    });
+    details.appendChild(editDescBtn);
+}
 
 
 export {initListSelectBtn, initNewListBtn, initNewItemBtn, renderItems};
