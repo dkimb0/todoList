@@ -105,6 +105,15 @@ function clearItems(){
     while (listDisplay.firstElementChild) {
         listDisplay.removeChild(listDisplay.firstElementChild);
     }
+
+    clearDetails();
+}
+
+function clearDetails(){
+    const detailsDisplay = document.getElementById('details');
+    while(detailsDisplay.firstElementChild){
+        detailsDisplay.removeChild(detailsDisplay.firstElementChild);
+    }
 }
 
 function clearNewItemBtn(){
@@ -168,17 +177,31 @@ function detailItem(item, itemArray, listName){
     document.getElementById(listName+itemArray.indexOf(item)).appendChild(detailBtn);
     
     detailBtn.addEventListener('click', function(){
+        clearDetails();
+        
         //create Date view
-        if (item.getDetail() === true){
-            document.getElementById('details').removeChild(showDate);
-        }
+        let details = document.getElementById('details');
+        let showTitle = document.createElement('span');
         let showDate = document.createElement('span');
-        showDate.textContent = item.dueDate;
-        document.getElementById('details').appendChild(showDate);
+
+        showTitle.textContent = 'Title: ' + item.title;
+        showDate.textContent = '// Due Date: ' + item.dueDate;
+        
+
+        if (item.getDetail() === true){
+            item.toggleDetail();
+            while(details.firstChild){
+                details.removeChild(details.firstChild);
+            }
+
+        }else{
+            item.toggleDetail();
+            details.appendChild(showTitle);
+            details.appendChild(showDate);
+
+        }
         //create Date edit
-        let editDate = document.createElement('button');
-        editDate.textContent = 'Change Date';
-        document.getElementById('details').appendChild(editDate);
+        // editDate();
     })
 }
 
@@ -192,6 +215,19 @@ function deleteItem(item, itemDiv, itemArray, listName){
         document.getElementById('items').removeChild(itemDiv);
     });
 }
+
+//details edit functions:
+// function editDate(item){
+//     let editDateBtn = document.createElement('button');
+//     editDate.textContent = 'Change Date';
+//     document.getElementById('details').appendChild(editDateBtn);
+
+//     editDateBtn.addEventListener('click', function(){
+//         item.dueDate = prompt('Due Date: ');
+//     })
+
+//     renderDetail();
+// }
 
 
 export {initListSelectBtn, initNewListBtn, initNewItemBtn, renderItems};
