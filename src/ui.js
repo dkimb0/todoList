@@ -187,11 +187,12 @@ function priorityItem(item, domItem, itemArray, listName){
 }
 
 function detailItem(item, itemArray, listName){
-    let detailBtn = document.createElement('button');
+    // let detailBtn = document.createElement('button');
+    let detailBtn = document.getElementById(listName+itemArray.indexOf(item)).querySelector('p');
     let detailToggleHolder;
-    detailBtn.setAttribute('class', 'detailBtn');
-    detailBtn.textContent = 'Details';
-    document.getElementById(listName+itemArray.indexOf(item)).querySelector('.itemBackBtn').prepend(detailBtn);
+    // detailBtn.setAttribute('class', 'detailBtn');
+    // detailBtn.textContent = 'Details';
+    // document.getElementById(listName+itemArray.indexOf(item)).querySelector('.itemBackBtn').prepend(detailBtn);
     
     detailBtn.addEventListener('click', function(){
         
@@ -246,6 +247,9 @@ function editTitle(item, itemArray, listName, details){
     editTitleBtn.textContent = 'Edit Title';
     editTitleBtn.addEventListener('click', function(){
         item.title = prompt('Title: ');
+        if (item.title === null){
+            return;
+        }
         clearItems(itemArray);
         renderItems(itemArray, listName);
         displayDetail(item, itemArray, listName);
@@ -255,10 +259,13 @@ function editTitle(item, itemArray, listName, details){
 
 function editDate(item, itemArray, listName, details){
     let editDateBtn = document.createElement('button');
-    editDateBtn.textContent = 'Change Date';
+    editDateBtn.textContent = 'Change Due Date';
 
     editDateBtn.addEventListener('click', function(){
         item.dueDate = prompt('Due Date: ');
+        if (item.dueDate === null){
+            return;
+        }
         clearItems(itemArray);
         renderItems(itemArray, listName);
         displayDetail(item, itemArray, listName);      
@@ -272,6 +279,9 @@ function editDesc(item, itemArray, listName, details){
     
     editDescBtn.addEventListener('click', function(){
         item.description = prompt('Edit Description: ');
+        if (item.description === null){
+            return;
+        }
         clearItems(itemArray);
         renderItems(itemArray, listName);
         displayDetail(item, itemArray, listName);
