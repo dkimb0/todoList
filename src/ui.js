@@ -1,5 +1,5 @@
 import { add } from "date-fns";
-import { createList, createItem, checkListName, filterByList } from "./appLogic";
+import { createList, createItem, checkListName, filterByList, toggleDetail } from "./appLogic";
 
 //init
 
@@ -11,7 +11,7 @@ function initDefaultList(listArray, itemArray){
 function initNewListBtn(listArray, itemArray){
     //creating button in DOM
     const initNewListBtn = document.createElement('button');
-    initNewListBtn.textContent = 'New List';
+    initNewListBtn.textContent = 'NEW LIST';
     
     initNewListBtn.addEventListener('click', () => {
         let listName = prompt('List Name: ', 'untitled');
@@ -137,7 +137,7 @@ function clearNewItemBtn(){
 function completeItem(item, domItem, itemArray, listName){
     let completeBtn = document.createElement('button');
     completeBtn.setAttribute('class', 'completeBtn');
-    completeBtn.textContent = 'x';
+    completeBtn.textContent = '✓';
     
     completeBtn.addEventListener('click', () => {
         item.toggleComplete();
@@ -156,7 +156,7 @@ function completeItem(item, domItem, itemArray, listName){
 function displayItem(item, itemArray, listName){
     let domItem = document.createElement('p');
     domItem.setAttribute('class', listName);
-    domItem.textContent = item.title + ' (Due Date: ' + item.dueDate + ')';
+    domItem.textContent = item.title + ' [Due: ' + item.dueDate + ']';
     //make complete and priority item styling persistent
     if (item.getComplete() === true){
         domItem.style.setProperty('text-decoration', 'line-through');
@@ -206,14 +206,6 @@ function detailItem(item, itemArray, listName){
     });
 }
 
-function toggleDetail(item){
-    if (item.detail === true){
-        item.detail = false;
-    }else{
-        item.detail = true;
-    }
-}
-
 function displayDetail(item, itemArray, listName){
     let details = document.getElementById('details');
 
@@ -240,7 +232,7 @@ function deleteItem(item, itemDiv, itemArray, listName){
     let deleteBtn = document.createElement('button');
     deleteBtn.setAttribute('class', 'deleteBtn');
     // deleteBtn.setAttribute('class', 'itemBoxEnd');
-    deleteBtn.textContent = '🗑️';
+    deleteBtn.textContent = 'X';
     document.getElementById(listName+itemArray.indexOf(item)).querySelector('.itemBackBtn').appendChild(deleteBtn);
 
     deleteBtn.addEventListener('click', function() {
