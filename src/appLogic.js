@@ -1,4 +1,3 @@
-
 //methods needed: order setting
 function createList(_name, _order){
     let name = _name;
@@ -112,4 +111,12 @@ function filterByList(itemArray, listName){
     return result;
 }
 
-export { createList, createItem, checkListName, filterByList };
+function toggleDetail(item){
+    if (item.detail === true){
+        item.detail = false;
+    }else{
+        item.detail = true;
+    }
+    console.log('toggle detail: ' + item.detail)
+}
+export { createList, createItem, checkListName, filterByList, toggleDetail };

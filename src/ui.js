@@ -2,6 +2,12 @@ import { add } from "date-fns";
 import { createList, createItem, checkListName, filterByList } from "./appLogic";
 
 //init
+
+function initDefaultList(listArray, itemArray){
+    listArray.push(createList('default', listArray.length + 1));
+    initListSelectBtn('default', itemArray);
+}
+
 function initNewListBtn(listArray, itemArray){
     //creating button in DOM
     const initNewListBtn = document.createElement('button');
@@ -75,6 +81,11 @@ function renderItems(itemArray, listName){
         itemDiv.setAttribute('class', 'itemBox');
         document.getElementById('items').appendChild(itemDiv);
 
+        let itemFrontBtn = document.createElement('div');
+        itemFrontBtn.setAttribute('class', 'itemFrontBtn');
+        document.getElementById(listName+itemArray.indexOf(item)).prepend(itemFrontBtn);
+
+
         //generate item display
         let domItem = displayItem(item, itemArray, listName);
 
@@ -84,15 +95,12 @@ function renderItems(itemArray, listName){
         //generate completing item button
         completeItem(item, domItem, itemArray, listName);
 
+        let itemBackBtn = document.createElement('div');
+        itemBackBtn.setAttribute('class', 'itemBackBtn');
+        document.getElementById(listName+itemArray.indexOf(item)).appendChild(itemBackBtn);
+
         //generate details button
         detailItem(item, itemArray, listName);
-
-        //create Div for details of each item:
-        let detailDiv = document.createElement('div');
-        //create name display + name change button
-        //create description display + description change button
-        //create date display + date change button
-        //create priority display + priority change button
 
         //generate delete button
         deleteItem(item, itemDiv, itemArray, listName);
@@ -108,11 +116,10 @@ function clearItems(itemArray){
     clearDetails(itemArray);
 }
 
-function clearDetails(itemArray){
-    for (let i in itemArray){
-        itemArray[i].detail = false;
-        console.log(itemArray[i].detail);
-    };
+function clearDetails(itemArray, itemToSkip){
+    itemArray.forEach(itemClear => {
+        itemClear.detail = false;
+    })
     
     const detailsDisplay = document.getElementById('details');
     while(detailsDisplay.firstElementChild){
@@ -129,6 +136,7 @@ function clearNewItemBtn(){
 
 function completeItem(item, domItem, itemArray, listName){
     let completeBtn = document.createElement('button');
+    completeBtn.setAttribute('class', 'completeBtn');
     completeBtn.textContent = 'x';
     
     completeBtn.addEventListener('click', () => {
@@ -141,7 +149,8 @@ function completeItem(item, domItem, itemArray, listName){
         };
     });
 
-    document.getElementById(listName+itemArray.indexOf(item)).prepend(completeBtn);
+    // document.getElementById(listName+itemArray.indexOf(item)).prepend(completeBtn);
+    document.getElementById(listName+itemArray.indexOf(item)).querySelector('.itemFrontBtn').prepend(completeBtn);
 }
 
 function displayItem(item, itemArray, listName){
@@ -162,8 +171,10 @@ function displayItem(item, itemArray, listName){
 
 function priorityItem(item, domItem, itemArray, listName){
     let priorityBtn = document.createElement('button');
+    priorityBtn.setAttribute('class', 'priorityBtn');
     priorityBtn.textContent = '!';
-    document.getElementById(listName+itemArray.indexOf(item)).prepend(priorityBtn);
+    // document.getElementById(listName+itemArray.indexOf(item)).prepend(priorityBtn);
+    document.getElementById(listName+itemArray.indexOf(item)).querySelector('.itemFrontBtn').prepend(priorityBtn);
     
     priorityBtn.addEventListener('click', () => {
         item.togglePriority();
@@ -177,39 +188,33 @@ function priorityItem(item, domItem, itemArray, listName){
 
 function detailItem(item, itemArray, listName){
     let detailBtn = document.createElement('button');
-    detailBtn.textContent = 'Details'
-    document.getElementById(listName+itemArray.indexOf(item)).appendChild(detailBtn);
+    let detailToggleHolder;
+    detailBtn.setAttribute('class', 'detailBtn');
+    detailBtn.textContent = 'Details';
+    document.getElementById(listName+itemArray.indexOf(item)).querySelector('.itemBackBtn').prepend(detailBtn);
     
     detailBtn.addEventListener('click', function(){
-        // let details = document.getElementById('details');
-
-        // let showTitle = document.createElement('span');
-        // let showDate = document.createElement('span');
-        // let showDesc = document.createElement('span');
-
-        // showTitle.textContent = 'Title: ' + item.title;
-        // showDate.textContent = '// Due Date: ' + item.dueDate;
-        // showDesc.textContent = '// Description: ' + item.description;
-
-        // if (item.detail === true){
-        //     clearDetails(itemArray);
-        // }else{
-        //     details.appendChild(showTitle);
-        //     editTitle(item, itemArray, listName, details);
-
-        //     details.appendChild(showDate);
-        //     editDate(item, itemArray, listName, details);
-            
-        //     details.appendChild(showDesc);
-        //     editDesc(item, itemArray, listName, details);
-            
-        //     item.detail = true;
-        // }
-        toggleDetailDisplay(item, itemArray, listName);
-    })
+        
+        detailToggleHolder = item.detail;
+        console.log(detailToggleHolder);
+        clearDetails(itemArray);
+        item.detail = detailToggleHolder;
+        console.log(item.detail);
+        displayDetail(item, itemArray, listName);
+        toggleDetail(item);
+        
+    });
 }
 
-function toggleDetailDisplay(item, itemArray, listName){
+function toggleDetail(item){
+    if (item.detail === true){
+        item.detail = false;
+    }else{
+        item.detail = true;
+    }
+}
+
+function displayDetail(item, itemArray, listName){
     let details = document.getElementById('details');
 
     let showTitle = document.createElement('span');
@@ -217,40 +222,33 @@ function toggleDetailDisplay(item, itemArray, listName){
     let showDesc = document.createElement('span');
 
     showTitle.textContent = 'Title: ' + item.title;
-    showDate.textContent = '// Due Date: ' + item.dueDate;
-    showDesc.textContent = '// Description: ' + item.description;
-
-    if (item.detail === true){
-        clearDetails(itemArray);
-    }else{
+    showDate.textContent = 'Due Date: ' + item.dueDate;
+    showDesc.textContent = 'Description: ' + item.description;
+    if (item.detail === false){
         details.appendChild(showTitle);
         editTitle(item, itemArray, listName, details);
-
+    
         details.appendChild(showDate);
         editDate(item, itemArray, listName, details);
         
         details.appendChild(showDesc);
         editDesc(item, itemArray, listName, details);
-        
-        item.detail = true;
     }
 }
 
 function deleteItem(item, itemDiv, itemArray, listName){
     let deleteBtn = document.createElement('button');
+    deleteBtn.setAttribute('class', 'deleteBtn');
+    // deleteBtn.setAttribute('class', 'itemBoxEnd');
     deleteBtn.textContent = '🗑️';
-    document.getElementById(listName+itemArray.indexOf(item)).appendChild(deleteBtn);
+    document.getElementById(listName+itemArray.indexOf(item)).querySelector('.itemBackBtn').appendChild(deleteBtn);
 
     deleteBtn.addEventListener('click', function() {
         item.list = 'delete';
         document.getElementById('items').removeChild(itemDiv);
         clearDetails(itemArray);
     });
-
-    
 }
-
-// function reset
 
 //details edit functions:
 function editTitle(item, itemArray, listName, details){
@@ -259,13 +257,8 @@ function editTitle(item, itemArray, listName, details){
     editTitleBtn.addEventListener('click', function(){
         item.title = prompt('Title: ');
         clearItems(itemArray);
-        // if (item.getDetail() === true){
-        //     item.toggleDetail();
-        // }
         renderItems(itemArray, listName);
-        //add something just to reload details menu
-        //need separate function for renderDetails()
-        toggleDetailDisplay(item, itemArray, listName);
+        displayDetail(item, itemArray, listName);
     });
     details.appendChild(editTitleBtn);
 }
@@ -278,7 +271,7 @@ function editDate(item, itemArray, listName, details){
         item.dueDate = prompt('Due Date: ');
         clearItems(itemArray);
         renderItems(itemArray, listName);
-        toggleDetailDisplay(item, itemArray, listName);      
+        displayDetail(item, itemArray, listName);      
     })
     details.appendChild(editDateBtn);
 }
@@ -291,10 +284,10 @@ function editDesc(item, itemArray, listName, details){
         item.description = prompt('Edit Description: ');
         clearItems(itemArray);
         renderItems(itemArray, listName);
-        toggleDetailDisplay(item, itemArray, listName);
+        displayDetail(item, itemArray, listName);
     });
     details.appendChild(editDescBtn);
 }
 
 
-export {initListSelectBtn, initNewListBtn, initNewItemBtn, renderItems};
+export {initListSelectBtn, initNewListBtn, initNewItemBtn, renderItems, initDefaultList};
