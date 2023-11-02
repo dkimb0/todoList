@@ -117,6 +117,5 @@ function toggleDetail(item){
     }else{
         item.detail = true;
     }
-    console.log('toggle detail: ' + item.detail)
 }
 export { createList, createItem, checkListName, filterByList, toggleDetail };

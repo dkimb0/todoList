@@ -196,10 +196,8 @@ function detailItem(item, itemArray, listName){
     detailBtn.addEventListener('click', function(){
         
         detailToggleHolder = item.detail;
-        console.log(detailToggleHolder);
         clearDetails(itemArray);
         item.detail = detailToggleHolder;
-        console.log(item.detail);
         displayDetail(item, itemArray, listName);
         toggleDetail(item);
         
