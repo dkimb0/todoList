@@ -3,6 +3,7 @@ function createList(_name, _order){
     let name = _name;
     let visible = true;
     let order = _order;
+    let select = true;
 
     const toggleVisible = () => {
         if (visible === true){
@@ -17,6 +18,14 @@ function createList(_name, _order){
         return visible;
     };
 
+    const toggleSelect = () => {
+        if (select === true){
+            select = false;
+        }else{
+            select = true;
+        }
+    }
+
     return{
         name,
         order,
@@ -30,7 +39,7 @@ function createItem(_title, _list){
     let title = _title;
     let list = _list;
     let dueDate = 'N/A';
-    let description = '';
+    let description = 'N/A';
 
     let complete = false;
     let priority = false;

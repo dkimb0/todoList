@@ -55,7 +55,7 @@ function initNewItemBtn(itemArray, listName){
 }
 
 //creates new list selector button
-function initListSelectBtn(listName, itemArray){
+function initListSelectBtn(listName, itemArray, listArray){
     //initialize list select button
     const listSelectBtn = document.createElement('button');
     listSelectBtn.textContent = listName;
@@ -95,15 +95,15 @@ function renderItems(itemArray, listName){
         //generate completing item button
         completeItem(item, domItem, itemArray, listName);
 
-        let itemBackBtn = document.createElement('div');
-        itemBackBtn.setAttribute('class', 'itemBackBtn');
-        document.getElementById(listName+itemArray.indexOf(item)).appendChild(itemBackBtn);
+        // let itemBackBtn = document.createElement('div');
+        // itemBackBtn.setAttribute('class', 'itemBackBtn');
+        // document.getElementById(listName+itemArray.indexOf(item)).appendChild(itemBackBtn);
 
-        //generate details button
+        //generate details button (really just P element)
         detailItem(item, itemArray, listName);
 
         //generate delete button
-        deleteItem(item, itemDiv, itemArray, listName);
+        // deleteItem(item, itemDiv, itemArray, listName);
     });
 }
 
@@ -154,9 +154,18 @@ function completeItem(item, domItem, itemArray, listName){
 }
 
 function displayItem(item, itemArray, listName){
+    let itemContainer = document.createElement('div');
+    itemContainer.setAttribute('id', listName+itemArray.indexOf(item)+'Container');
+    itemContainer.setAttribute('class', 'itemContainer');
+    
     let domItem = document.createElement('p');
-    domItem.setAttribute('class', listName);
-    domItem.textContent = item.title + ' [Due: ' + item.dueDate + ']';
+    domItem.setAttribute('class', `${listName} domItem` );
+    domItem.textContent = item.title;
+
+    let dateItem = document.createElement('p');
+    dateItem.setAttribute('class', 'itemDate');
+    dateItem.textContent = 'Due ' + item.dueDate;
+
     //make complete and priority item styling persistent
     if (item.getComplete() === true){
         domItem.style.setProperty('text-decoration', 'line-through');
@@ -164,7 +173,14 @@ function displayItem(item, itemArray, listName){
     if (item.getPriority() === true){
         domItem.style.color = 'red';
     }
-    document.getElementById(listName+itemArray.indexOf(item)).appendChild(domItem);
+
+    document.getElementById(listName+itemArray.indexOf(item)).appendChild(itemContainer);
+    document.getElementById(listName+itemArray.indexOf(item)+'Container').appendChild(domItem);
+    
+    if (item.dueDate === 'N/A'){
+    }else{
+        document.getElementById(listName+itemArray.indexOf(item)+'Container').appendChild(dateItem);
+    }
 
     return domItem;
 }
@@ -187,12 +203,8 @@ function priorityItem(item, domItem, itemArray, listName){
 }
 
 function detailItem(item, itemArray, listName){
-    // let detailBtn = document.createElement('button');
-    let detailBtn = document.getElementById(listName+itemArray.indexOf(item)).querySelector('p');
+    let detailBtn = document.getElementById(listName+itemArray.indexOf(item)).querySelector('.itemContainer');
     let detailToggleHolder;
-    // detailBtn.setAttribute('class', 'detailBtn');
-    // detailBtn.textContent = 'Details';
-    // document.getElementById(listName+itemArray.indexOf(item)).querySelector('.itemBackBtn').prepend(detailBtn);
     
     detailBtn.addEventListener('click', function(){
         
@@ -208,37 +220,60 @@ function detailItem(item, itemArray, listName){
 function displayDetail(item, itemArray, listName){
     let details = document.getElementById('details');
 
+    let title = document.createElement('span');
+    let date = document.createElement('span');
+    let desc = document.createElement('span');
+    title.setAttribute('class', 'boldLabel');
+    date.setAttribute('class', 'boldLabel');
+    desc.setAttribute('class', 'boldLabel');
+
+    title.textContent = 'TITLE:\r\n';
+    date.textContent = 'DUE:\r\n';
+    desc.textContent = 'DESCRIPTION:\r\n';
+
     let showTitle = document.createElement('span');
     let showDate = document.createElement('span');
     let showDesc = document.createElement('span');
 
-    showTitle.textContent = 'Title: ' + item.title;
-    showDate.textContent = 'Due Date: ' + item.dueDate;
-    showDesc.textContent = 'Description: ' + item.description;
+    let itemDiv = document.getElementById(listName + itemArray.indexOf(item));
+
+    showTitle.textContent = item.title;
+    showDate.textContent = item.dueDate;
+    showDesc.textContent = item.description;
+
+    showTitle.setAttribute('class', 'detailTitle');
+    showDate.setAttribute('class', 'detailDate');
+    showDesc.setAttribute('class', 'detailDesc');
+
     if (item.detail === false){
+        details.appendChild(title);
         details.appendChild(showTitle);
         editTitle(item, itemArray, listName, details);
     
+        details.appendChild(date);
         details.appendChild(showDate);
         editDate(item, itemArray, listName, details);
         
+        details.appendChild(desc);
         details.appendChild(showDesc);
         editDesc(item, itemArray, listName, details);
+
+        deleteItem(item, itemDiv, itemArray, listName)
     }
 }
 
 function deleteItem(item, itemDiv, itemArray, listName){
-    let deleteBtn = document.createElement('button');
+    const deleteBtn = document.createElement('button');
     deleteBtn.setAttribute('class', 'deleteBtn');
-    // deleteBtn.setAttribute('class', 'itemBoxEnd');
-    deleteBtn.textContent = 'X';
-    document.getElementById(listName+itemArray.indexOf(item)).querySelector('.itemBackBtn').appendChild(deleteBtn);
+    deleteBtn.textContent = 'Delete Item';
 
     deleteBtn.addEventListener('click', function() {
         item.list = 'delete';
         document.getElementById('items').removeChild(itemDiv);
         clearDetails(itemArray);
     });
+
+    details.appendChild(deleteBtn);
 }
 
 //details edit functions:
@@ -246,13 +281,16 @@ function editTitle(item, itemArray, listName, details){
     const editTitleBtn = document.createElement('button');
     editTitleBtn.textContent = 'Edit Title';
     editTitleBtn.addEventListener('click', function(){
+        let titleHolder = item.title;
         item.title = prompt('Title: ');
         if (item.title === null){
+            item.title = titleHolder;
             return;
         }
         clearItems(itemArray);
         renderItems(itemArray, listName);
         displayDetail(item, itemArray, listName);
+        toggleDetail(item);
     });
     details.appendChild(editTitleBtn);
 }
@@ -262,13 +300,16 @@ function editDate(item, itemArray, listName, details){
     editDateBtn.textContent = 'Change Due Date';
 
     editDateBtn.addEventListener('click', function(){
+        let dateHolder = item.dueDate;
         item.dueDate = prompt('Due Date: ');
         if (item.dueDate === null){
+            item.dueDate = dateHolder;
             return;
         }
         clearItems(itemArray);
         renderItems(itemArray, listName);
-        displayDetail(item, itemArray, listName);      
+        displayDetail(item, itemArray, listName);
+        toggleDetail(item);      
     })
     details.appendChild(editDateBtn);
 }
@@ -278,13 +319,16 @@ function editDesc(item, itemArray, listName, details){
     editDescBtn.textContent = 'Edit Description';
     
     editDescBtn.addEventListener('click', function(){
+        let descHolder = item.description;
         item.description = prompt('Edit Description: ');
         if (item.description === null){
+            item.description = descHolder;
             return;
         }
         clearItems(itemArray);
         renderItems(itemArray, listName);
         displayDetail(item, itemArray, listName);
+        toggleDetail(item);
     });
     details.appendChild(editDescBtn);
 }

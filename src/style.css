@@ -1,12 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;900&display=swap');
 
 :root{
     --appWidth: 300px;
     --offWhite: rgb(243, 243, 243);
+    --white: rgb(255, 255, 255);
     --lightGrey: rgb(223, 223, 223);
     --darkGreen: rgb(118, 158, 158);
     --lightGreen: rgb(157, 212, 212);
     --offBlack: rgb(10, 10, 10);
+    --darkRed: rgb(220, 76, 76);
+    --lightRed: rgb(226, 147, 147);
 }
 
 body{
@@ -33,8 +36,8 @@ button:focus{
 }
 
 .priorityBtn,
-.completeBtn,
-.deleteBtn{
+.completeBtn
+{
     width: 2rem;
 }
 
@@ -45,12 +48,64 @@ button:focus{
 
 .deleteBtn{
     margin-left: 2px;
+    margin-top: 2rem;
+    background-color: var(--darkRed);
+}
+
+.deleteBtn:hover{
+    background-color: var(--lightRed);
+}
+
+.itemDate{
+    font-size: 0.75rem;
+    flex-grow: 0;
+    flex-wrap: nowrap;
+}
+
+.itemContainer{
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.domItem{
+    flex-wrap: wrap;
+    margin-left: .5rem;
+}
+
+* > #details{
+    font-size: 1rem;
+}
+
+.detailDesc,
+.detailDate,
+.detailTitle{
+    white-space: pre;
+    /* margin-bottom: 1rem; */
+    text-wrap: balance;
+}
+
+.boldLabel{
+    font-weight: 900;
+}
+
+#details > button{
+    margin-bottom: 1rem;
 }
 
 p {
     margin: 0;
     align-self: center;
-    /* flex-grow: 2; */
+    flex-grow: 1;
+    user-select: none;
+}
+
+p:hover{
+    cursor: pointer;
+}
+
+.itemBox:hover{
+    background-color: var(--white);
 }
 
 #totalContainer{
@@ -76,10 +131,15 @@ p {
 #items{
     flex: auto;
     align-items: stretch;
+    min-width: 25vw;
 }
 
 #detailsContainer{
     flex: 3;
+}
+
+#listDisplay > *{
+    margin-right: 2px;
 }
 
 #buttonContainer{
@@ -94,14 +154,12 @@ p {
 .itemBox{
     background-color: var(--offWhite);
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     border-radius: 10px;
     padding: 2px;
     margin-top: 4px;
-
 }
 
-/* .detailBtn, */
 .deleteBtn{
     justify-content: flex-end;
 }
@@ -109,17 +167,18 @@ p {
 #detailsContainer{
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
+    padding-left: 2rem;
 
 }
 
 #details{
     display: flex;
     flex-direction: column;
+    min-width: 25vw;
 }
 
-.itemFrontBtn,
-.itemBackBtn{
+.itemFrontBtn{
     display: flex;
     align-items: stretch;
 }
