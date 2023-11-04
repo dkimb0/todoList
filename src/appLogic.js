@@ -1,36 +1,11 @@
 //methods needed: order setting
 function createList(_name, _order){
     let name = _name;
-    let visible = true;
     let order = _order;
-    let select = true;
-
-    const toggleVisible = () => {
-        if (visible === true){
-            visible = false;
-        }else{
-            visible = true;
-        }
-        return visible;
-    };
-
-    const getVisible = () => {
-        return visible;
-    };
-
-    const toggleSelect = () => {
-        if (select === true){
-            select = false;
-        }else{
-            select = true;
-        }
-    }
 
     return{
         name,
-        order,
-        toggleVisible,
-        getVisible
+        order
     };
 }
 
@@ -44,20 +19,6 @@ function createItem(_title, _list){
     let complete = false;
     let priority = false;
     let detail = false;
-
-
-
-    const toggleDetail = () => {
-        if (detail === true){
-            detail = false;
-        }else{
-            detail = true;
-        }
-    };
-
-    const getDetail = () => {
-        return detail;
-    }
 
     const toggleComplete = () => {
         if (complete === true){
@@ -83,9 +44,8 @@ function createItem(_title, _list){
         return priority;
     }
 
-    const toggleDelete = () => {
-        list = 'deleted';
-    }
+    let storageItemString = '::TITLE::' + title + '::LIST::' + list + '::DUEDATE::' + dueDate + '::DESCRIPTION::' + description
+    + "::COMPLETE::" + complete + '::PRIORITY::' + priority;
 
     return{
         title,
@@ -93,15 +53,12 @@ function createItem(_title, _list){
         dueDate,
         description,
         detail,
+        storageItemString,
 
-        toggleDetail,
-        getDetail,
         toggleComplete,
         getComplete,
         togglePriority,
-        getPriority,
-        toggleDelete,
-
+        getPriority
     };
 }
 

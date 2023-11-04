@@ -1,4 +1,3 @@
-import { add } from "date-fns";
 import { createList, createItem, checkListName, filterByList, toggleDetail } from "./appLogic";
 
 //init
@@ -8,7 +7,7 @@ function initDefaultList(listArray, itemArray){
     initListSelectBtn('default', itemArray);
 }
 
-function initNewListBtn(listArray, itemArray){
+function initNewListBtn(listArray, itemArray, storageListCounter){
     //creating button in DOM
     const initNewListBtn = document.createElement('button');
     initNewListBtn.textContent = 'NEW LIST';
@@ -29,6 +28,15 @@ function initNewListBtn(listArray, itemArray){
             clearItems(itemArray);
             renderItems(filterByList(itemArray, listName), listName);
 
+
+            //set up storage
+            storageListCounter += 1;
+            localStorage.setItem('listCounter', storageListCounter);
+            // console.log(storageListCounter);
+
+            localStorage.setItem(`listArray${storageListCounter}`, listName);
+            // console.log(localStorage.getItem(`itemArray${storageListCounter}`));
+
         }else{
             console.log('list name already taken');
         }
@@ -47,6 +55,9 @@ function initNewItemBtn(itemArray, listName){
             return;
         }
         itemArray.push(createItem(itemName, listName));
+        // localStorage.setItem();
+        console.log(itemArray[0].storageItemString);
+
         clearItems(itemArray);
         renderItems(filterByList(itemArray, listName), listName);
     });

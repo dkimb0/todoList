@@ -60,6 +60,7 @@ button:focus{
     font-size: 0.75rem;
     flex-grow: 0;
     flex-wrap: nowrap;
+    margin-right: 1rem;
 }
 
 .itemContainer{
@@ -130,6 +131,7 @@ p:hover{
 
 #items{
     flex: auto;
+    /* flex-grow: 3; */
     align-items: stretch;
     min-width: 25vw;
 }
