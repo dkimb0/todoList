@@ -47,10 +47,24 @@ function createItem(_title, _list, _order, _dueDate = 'N/A', _description = 'N/A
     }
 
     const getStorageItemString = () =>{
-        storageItemString = title + '::::' + list + '::::' + dueDate + '::::' + description
+        return title + '::::' + list + '::::' + dueDate + '::::' + description
     + "::::" + complete + '::::' + priority + '::::' + order;
+    }
 
-        return storageItemString;
+    const setDelete = () => {
+        list = 'delete';
+    }
+
+    const setTitle = (newTitle) => {
+        title = newTitle;
+    }
+
+    const setDate = (newDate) => {
+        dueDate = newDate;
+    }
+
+    const setDesc = (newDesc) => {
+        description = newDesc;
     }
 
     return{
@@ -67,7 +81,11 @@ function createItem(_title, _list, _order, _dueDate = 'N/A', _description = 'N/A
         getComplete,
         togglePriority,
         getPriority,
-        getStorageItemString
+        getStorageItemString,
+        setDelete,
+        setTitle,
+        setDate,
+        setDesc
     };
 }
 
@@ -94,4 +112,38 @@ function toggleDetail(item){
     }
 }
 
-export { createList, createItem, checkListName, filterByList, toggleDetail };
+function loadLocalStorageCounters(){
+    let storageListCounter;
+    let storageItemCounter;
+    
+
+    //new or load storageListCounter
+    if (!localStorage.getItem('listCounter')){
+        storageListCounter = 0;
+    }else{
+        storageListCounter = Number(localStorage.getItem('listCounter'));
+    }
+
+    //new or load storageItemCounter
+    if (!localStorage.getItem('itemCounter')){
+        storageItemCounter = 0;
+    }else{
+        storageItemCounter = Number(localStorage.getItem('itemCounter'));
+    }
+
+    return [storageListCounter, storageItemCounter];
+}
+
+// function loadLocalStorageListArray(storageListCounter){
+//     let storageListNameHolder;
+
+//     if (storageListCounter !== 0){
+//         for (let i = 1; i <= storageListCounter; i++){
+//             storageListNameHolder = localStorage.getItem(`listArray${i}`);
+//             listArray.push(createList(storageListNameHolder, i));
+//             initListSelectBtn(storageListNameHolder, itemArray);
+//         }
+//     }
+// }
+
+export { createList, createItem, checkListName, filterByList, toggleDetail, loadLocalStorageCounters};

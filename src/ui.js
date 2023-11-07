@@ -55,8 +55,8 @@ function initNewItemBtn(itemArray, listName){
             return;
         }
         itemArray.push(createItem(itemName, listName, itemArray.length+1));
-        console.log(itemArray[itemArray.length -1].storageItemString);
-        console.log('itemArray Length: ' + itemArray.length);
+        // console.log(itemArray[itemArray.length -1].storageItemString);
+        // console.log('itemArray Length: ' + itemArray.length);
 
         localStorage.setItem(`itemArray${itemArray.length}`, itemArray[itemArray.length -1].storageItemString);
         localStorage.setItem(`itemArray${itemArray.length}`, itemArray[itemArray.length -1].getStorageItemString());
@@ -296,7 +296,10 @@ function deleteItem(item, itemDiv, itemArray, listName){
     deleteBtn.textContent = 'Delete Item';
 
     deleteBtn.addEventListener('click', function() {
-        item.list = 'delete';
+        item.setDelete();
+        console.log(item.getStorageItemString());
+        updateItemStorage(item, itemArray);
+
         document.getElementById('items').removeChild(itemDiv);
         clearDetails(itemArray);
     });
@@ -310,15 +313,25 @@ function editTitle(item, itemArray, listName, details){
     editTitleBtn.textContent = 'Edit Title';
     editTitleBtn.addEventListener('click', function(){
         let titleHolder = item.title;
-        item.title = prompt('Title: ');
-        if (item.title === null){
+        let newTitle = prompt('Title: ');
+
+        //need to do both, update screen with first
+        item.title = newTitle;
+        //update obj with second
+        item.setTitle(newTitle);
+        // console.log(newTitle==='');
+
+        if (newTitle === '' || newTitle === null){
             item.title = titleHolder;
+            item.setTitle(titleHolder);
             return;
         }
         clearItems(itemArray);
         renderItems(itemArray, listName);
         displayDetail(item, itemArray, listName);
         toggleDetail(item);
+
+        updateItemStorage(item, itemArray);
     });
     details.appendChild(editTitleBtn);
 }
@@ -329,15 +342,22 @@ function editDate(item, itemArray, listName, details){
 
     editDateBtn.addEventListener('click', function(){
         let dateHolder = item.dueDate;
-        item.dueDate = prompt('Due Date: ');
-        if (item.dueDate === null){
+        let newDate = prompt('Due Date: ');
+
+        item.dueDate = newDate;
+        item.setDate(newDate);
+
+
+        if (newDate === null){
             item.dueDate = dateHolder;
+            item.setDate(dateHolder);
             return;
         }
         clearItems(itemArray);
         renderItems(itemArray, listName);
         displayDetail(item, itemArray, listName);
-        toggleDetail(item);      
+        toggleDetail(item);
+        updateItemStorage(item, itemArray);      
     })
     details.appendChild(editDateBtn);
 }
@@ -348,15 +368,21 @@ function editDesc(item, itemArray, listName, details){
     
     editDescBtn.addEventListener('click', function(){
         let descHolder = item.description;
-        item.description = prompt('Edit Description: ');
+        let newDesc = prompt('Edit Description: ');
+
+        item.description = newDesc;
+        item.setDesc(newDesc);
+
         if (item.description === null){
             item.description = descHolder;
+            item.setDesc(descHolder);
             return;
         }
         clearItems(itemArray);
         renderItems(itemArray, listName);
         displayDetail(item, itemArray, listName);
         toggleDetail(item);
+        updateItemStorage(item, itemArray);
     });
     details.appendChild(editDescBtn);
 }
