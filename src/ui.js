@@ -54,10 +54,14 @@ function initNewItemBtn(itemArray, listName){
         if (itemName === null){
             return;
         }
-        itemArray.push(createItem(itemName, listName));
-        // localStorage.setItem();
-        console.log(itemArray[0].storageItemString);
+        itemArray.push(createItem(itemName, listName, itemArray.length+1));
+        console.log(itemArray[itemArray.length -1].storageItemString);
+        console.log('itemArray Length: ' + itemArray.length);
 
+        localStorage.setItem(`itemArray${itemArray.length}`, itemArray[itemArray.length -1].storageItemString);
+        localStorage.setItem(`itemArray${itemArray.length}`, itemArray[itemArray.length -1].getStorageItemString());
+        // console.log(itemArray[itemArray.length -1].storageItemString + '::::' + itemArray.length);
+        localStorage.setItem('itemCounter', itemArray.length);
         clearItems(itemArray);
         renderItems(filterByList(itemArray, listName), listName);
     });
@@ -99,9 +103,11 @@ function renderItems(itemArray, listName){
 
         //generate item display
         let domItem = displayItem(item, itemArray, listName);
+        displayPriority(item, domItem);
 
         //generate priority toggle button (order based on prepend)
         priorityItem(item, domItem, itemArray, listName);
+        
 
         //generate completing item button
         completeItem(item, domItem, itemArray, listName);
@@ -115,6 +121,8 @@ function renderItems(itemArray, listName){
 
         //generate delete button
         // deleteItem(item, itemDiv, itemArray, listName);
+
+        
     });
 }
 
@@ -152,16 +160,20 @@ function completeItem(item, domItem, itemArray, listName){
     
     completeBtn.addEventListener('click', () => {
         item.toggleComplete();
-
-        if (item.getComplete() === true){
-            domItem.style.setProperty('text-decoration', 'line-through');
-        }else{
-            domItem.style.setProperty('text-decoration', 'none');
-        };
+        displayComplete(item, domItem);
+        updateItemStorage(item, itemArray);
     });
 
     // document.getElementById(listName+itemArray.indexOf(item)).prepend(completeBtn);
     document.getElementById(listName+itemArray.indexOf(item)).querySelector('.itemFrontBtn').prepend(completeBtn);
+}
+
+function displayComplete(item, domItem){
+    if (item.getComplete() === true){
+        domItem.style.setProperty('text-decoration', 'line-through');
+    }else{
+        domItem.style.setProperty('text-decoration', 'none');
+    };
 }
 
 function displayItem(item, itemArray, listName){
@@ -205,12 +217,17 @@ function priorityItem(item, domItem, itemArray, listName){
     
     priorityBtn.addEventListener('click', () => {
         item.togglePriority();
-        if (item.getPriority() === true){
-            domItem.style.color = 'red';
-        }else{
-            domItem.style.color = 'black';
-        };
+        displayPriority(item, domItem);
+        updateItemStorage(item, itemArray);
     });
+}
+
+function displayPriority(item, domItem){    
+    if (item.getPriority() === true){
+        domItem.style.color = 'red';
+    }else{
+        domItem.style.color = 'black';
+    };
 }
 
 function detailItem(item, itemArray, listName){
@@ -345,4 +362,13 @@ function editDesc(item, itemArray, listName, details){
 }
 
 
-export {initListSelectBtn, initNewListBtn, initNewItemBtn, renderItems, initDefaultList};
+
+//function to update local storage
+function updateItemStorage(item, itemArray){
+    localStorage.setItem(`itemArray${item.order}`, item.getStorageItemString());
+    // item.storageItemString = item.getStorageItemString();
+    // console.log(itemArray[0]);
+    // localStorage.setItem(`itemArray${itemArray.length}`, itemArray[itemArray.length -1].getStorageItemString());
+}
+
+export {initListSelectBtn, initNewListBtn, initNewItemBtn, renderItems, initDefaultList, clearNewItemBtn};

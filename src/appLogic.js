@@ -9,16 +9,18 @@ function createList(_name, _order){
     };
 }
 
-function createItem(_title, _list){
+function createItem(_title, _list, _order, _dueDate = 'N/A', _description = 'N/A', _complete = false, _priority = false){
     //add form later in UI which will populate these
     let title = _title;
     let list = _list;
-    let dueDate = 'N/A';
-    let description = 'N/A';
+    let dueDate = _dueDate;
+    let description = _description;
 
-    let complete = false;
-    let priority = false;
+    let complete = _complete === 'true';
+    let priority = _priority === 'true';
     let detail = false;
+    let order = _order;
+    let storageItemString;
 
     const toggleComplete = () => {
         if (complete === true){
@@ -44,8 +46,12 @@ function createItem(_title, _list){
         return priority;
     }
 
-    let storageItemString = '::TITLE::' + title + '::LIST::' + list + '::DUEDATE::' + dueDate + '::DESCRIPTION::' + description
-    + "::COMPLETE::" + complete + '::PRIORITY::' + priority;
+    const getStorageItemString = () =>{
+        storageItemString = title + '::::' + list + '::::' + dueDate + '::::' + description
+    + "::::" + complete + '::::' + priority + '::::' + order;
+
+        return storageItemString;
+    }
 
     return{
         title,
@@ -54,11 +60,14 @@ function createItem(_title, _list){
         description,
         detail,
         storageItemString,
+        order,
+        priority,
 
         toggleComplete,
         getComplete,
         togglePriority,
-        getPriority
+        getPriority,
+        getStorageItemString
     };
 }
 
@@ -84,4 +93,5 @@ function toggleDetail(item){
         item.detail = true;
     }
 }
+
 export { createList, createItem, checkListName, filterByList, toggleDetail };
