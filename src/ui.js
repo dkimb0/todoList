@@ -80,6 +80,8 @@ function initListSelectBtn(listName, itemArray, listArray){
         renderItems(filterByList(itemArray, listName),listName);
         clearNewItemBtn()
         initNewItemBtn(itemArray, listName);
+
+        localStorage.setItem('lastList', listName);
     });
 
     document.getElementById('listDisplay').appendChild(listSelectBtn);

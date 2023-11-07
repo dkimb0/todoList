@@ -30,10 +30,12 @@ button{
     border: none;
 }
 button:hover,
-button:focus{
+button:active{
     background-color:var(--lightGreen);
     color: var(--offBlack);
 }
+
+
 
 .priorityBtn,
 .completeBtn

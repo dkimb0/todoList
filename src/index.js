@@ -11,6 +11,7 @@ let storageListNameHolder;
 let storageItemStringHolder;
 let splitItemStrings;
 let [storageListCounter, storageItemCounter] = loadLocalStorageCounters();
+let lastList;
 
 initNewListBtn(listArray, itemArray, storageListCounter);
 initDefaultList(listArray, itemArray);
@@ -37,10 +38,17 @@ if (storageItemCounter !== 0){
     }
 }
 
+//reload lastList from last session
+if (!localStorage.getItem('lastList')){
+    lastList = 'default';
+}else{
+    lastList = localStorage.getItem('lastList');
+}
+
 //first load of the lists
-renderItems(filterByList(itemArray, 'default'),'default');
+renderItems(filterByList(itemArray, lastList), lastList);
 clearNewItemBtn()
-initNewItemBtn(itemArray, 'default');
+initNewItemBtn(itemArray, lastList);
 
 
 
